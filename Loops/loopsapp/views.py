@@ -17,6 +17,12 @@ def getloop(request):
     first = locations.pop(0)
     url = 'https://maps.googleapis.com/maps/api/directions/json?'
     url += 'key=' + google_maps_api_key
+    url += '&origin=place_id:' + first
+    url += '&destination=place_id:' + first
+    url += '&waypoints='
+    for i in locations:
+        url += 'placeid:' + i + '|'
+    print(url)
     return HttpResponse(first)
 
 
