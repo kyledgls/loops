@@ -13,28 +13,29 @@
 }
 
 .wrapper {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  grid-gap: 10px;
-  grid-auto-rows: minmax(100%, auto);
+    display: grid;
+    grid-template-columns: 25% 25% 25% 25%;
+    grid-template-rows: 10% 80% 10%;
+    grid-template-areas:
+    "header header header header"
+    "map map map waypoints"
+    "footer footer footer footer";
+    height:100%;
+
 }
 
 .header {
-  grid-column: 1/6;
-  grid-row: 1;
+    grid-area:header;
 }
 
 .map_container {
-  grid-column: 1/3;
-  grid-row: 2/4;
+    grid-area:map;
 }
 
 .waypoint_container {
-  grid-column: 3/6;
-  grid-row: 2/4;
+    grid-area:waypoints;
 }
 
 .footer {
-  grid-column: 1/6;
-  grid-row: 0/3;
+    grid-area:footer;
 }

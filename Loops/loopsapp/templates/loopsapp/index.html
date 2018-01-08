@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.1.4/js.cookie.min.js"></script>
     <meta charset="UTF-8">
     <title>Title</title>
     <meta name="description" content="Description">
@@ -8,97 +9,98 @@
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'loopsapp/loopsstyle.css' %}"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        /* Always set the map height explicitly to define the size of the div
+             * element that contains the map. */
+        #map {
+            height: 100%;
+        }
+
+        /* Optional: Makes the sample page fill the window. */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        #description {
+            font-family: Roboto;
+            font-size: 15px;
+            font-weight: 300;
+        }
+
+        #infowindow-content .title {
+            font-weight: bold;
+        }
+
+        #infowindow-content {
+            display: none;
+        }
+
+        #map #infowindow-content {
+            display: inline;
+        }
+
+        .pac-card {
+            margin: 10px 10px 0 0;
+            border-radius: 2px 0 0 2px;
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            outline: none;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+            background-color: #fff;
+            font-family: Roboto;
+        }
+
+        #pac-container {
+            padding-bottom: 12px;
+            margin-right: 12px;
+        }
+
+        .pac-controls {
+            display: inline-block;
+            padding: 5px 11px;
+        }
+
+        .pac-controls label {
+            font-family: Roboto;
+            font-size: 13px;
+            font-weight: 300;
+        }
+
+        #pac-input {
+            background-color: #fff;
+            font-family: Roboto;
+            font-size: 15px;
+            font-weight: 300;
+            margin-left: 12px;
+            padding: 0 11px 0 13px;
+            text-overflow: ellipsis;
+            width: 400px;
+        }
+
+        #pac-input:focus {
+            border-color: #4d90fe;
+        }
+
+        #title {
+            color: #fff;
+            background-color: #4d90fe;
+            font-size: 25px;
+            font-weight: 500;
+            padding: 6px 12px;
+        }
+
+        #target {
+            width: 345px;
+        }
+    </style>
 </head>
-<style>
-    * {
-        box-sizing: border-box;
-    }
-
-    /* Always set the map height explicitly to define the size of the div
-         * element that contains the map. */
-    #map {
-        height: 100%;
-    }
-
-    /* Optional: Makes the sample page fill the window. */
-    html, body {
-        height: 200%;
-        margin: 0;
-        padding: 0;
-    }
-
-    #description {
-        font-family: Roboto;
-        font-size: 15px;
-        font-weight: 300;
-    }
-
-    #infowindow-content .title {
-        font-weight: bold;
-    }
-
-    #infowindow-content {
-        display: none;
-    }
-
-    #map #infowindow-content {
-        display: inline;
-    }
-
-    .pac-card {
-        margin: 10px 10px 0 0;
-        border-radius: 2px 0 0 2px;
-        box-sizing: border-box;
-        -moz-box-sizing: border-box;
-        outline: none;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-        background-color: #fff;
-        font-family: Roboto;
-    }
-
-    #pac-container {
-        padding-bottom: 12px;
-        margin-right: 12px;
-    }
-
-    .pac-controls {
-        display: inline-block;
-        padding: 5px 11px;
-    }
-
-    .pac-controls label {
-        font-family: Roboto;
-        font-size: 13px;
-        font-weight: 300;
-    }
-
-    #pac-input {
-        background-color: #fff;
-        font-family: Roboto;
-        font-size: 15px;
-        font-weight: 300;
-        margin-left: 12px;
-        padding: 0 11px 0 13px;
-        text-overflow: ellipsis;
-        width: 400px;
-    }
-
-    #pac-input:focus {
-        border-color: #4d90fe;
-    }
-
-    #title {
-        color: #fff;
-        background-color: #4d90fe;
-        font-size: 25px;
-        font-weight: 500;
-        padding: 6px 12px;
-    }
-
-    #target {
-        width: 345px;
-    }
-</style>
 <body>
 <div class="wrapper">
     <div class="header">
@@ -113,104 +115,142 @@
         <h3>WAYPOINTS</h3>
         <ul id="ul_waypoints">
         </ul>
+        <button id="button_remove">Remove</button>
+        <button id="bt_loopulate">loopulate</button>
     </div>
+
     <div class="footer">
         footer
     </div>
-</div>
-<div id="rightdiv">
-</div>
 
-<script>
-    // This example adds a search box to a map, using the Google Place Autocomplete
-    // feature. People can enter geographical searches. The search box will return a
-    // pick list containing a mix of places and predicted search terms.
+    <script>
+        // This example adds a search box to a map, using the Google Place Autocomplete
+        // feature. People can enter geographical searches. The search box will return a
+        // pick list containing a mix of places and predicted search terms.
 
-    // This example requires the Places library. Include the libraries=places
-    // parameter when you first load the API. For example:
-    // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
+        // This example requires the Places library. Include the libraries=places
+        // parameter when you first load the API. For example:
+        // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
 
-    function initAutocomplete() {
-        var map = new google.maps.Map(document.getElementById('map'), {
-            center: {lat: -33.8688, lng: 151.2195},
-            zoom: 13,
-            mapTypeId: 'roadmap'
-        });
 
-        // Create the search box and link it to the UI element.
-        var input = document.getElementById('pac-input');
-        var searchBox = new google.maps.places.SearchBox(input);
-        map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
 
-        // Bias the SearchBox results towards current map's viewport.
-        map.addListener('bounds_changed', function () {
-            searchBox.setBounds(map.getBounds());
-        });
+        function http_post(url, data, success) {
+            let csrf_token = Cookies.get('csrftoken');
+            //let csrf_token = '{% csrf_token %}';
+            let xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState === 4 && this.status === 200) {
+                    success(xhttp.responseText);
+                }
+            };
+            xhttp.open("POST", url);
+            xhttp.setRequestHeader("Content-Type", "application/json");
+            xhttp.setRequestHeader('X-CSRFToken', csrf_token);
+            xhttp.send(JSON.stringify(data));
+        }
 
-        var markers = [];
-        // Listen for the event fired when the user selects a prediction and retrieve
-        // more details for that place.
-        searchBox.addListener('places_changed', function () {
-            var places = searchBox.getPlaces();
+        let locations = [];
 
-            if (places.length == 0) {
-                return;
-            }
-
-            // Clear out the old markers.
-            markers.forEach(function (marker) {
-                marker.setMap(null);
+        let bt_loopulate = document.getElementById('bt_loopulate');
+        bt_loopulate.onclick = function() {
+            let data = {locations: locations};
+            http_post("{% url 'loopsapp:getloop' %}", data, function (response) {
+                console.log(response);
             });
-            markers = [];
+        };
 
-            // For each place, get the icon, name and location.
-            var bounds = new google.maps.LatLngBounds();
-            places.forEach(function (place) {
 
-                if (!place.geometry) {
-                    console.log("Returned place contains no geometry");
+        function initAutocomplete() {
+            var map = new google.maps.Map(document.getElementById('map'), {
+                center: {lat: -33.8688, lng: 151.2195},
+                zoom: 13,
+                mapTypeId: 'roadmap'
+            });
+
+            // Create the search box and link it to the UI element.
+            var input = document.getElementById('pac-input');
+            var searchBox = new google.maps.places.SearchBox(input);
+            map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+            // Bias the SearchBox results towards current map's viewport.
+            map.addListener('bounds_changed', function () {
+                searchBox.setBounds(map.getBounds());
+            });
+
+            var markers = [];
+            // Listen for the event fired when the user selects a prediction and retrieve
+            // more details for that place.
+            searchBox.addListener('places_changed', function () {
+                var places = searchBox.getPlaces();
+
+                if (places.length == 0) {
                     return;
                 }
-                var icon = {
-                    url: place.icon,
-                    size: new google.maps.Size(71, 71),
-                    origin: new google.maps.Point(0, 0),
-                    anchor: new google.maps.Point(17, 34),
-                    scaledSize: new google.maps.Size(25, 25)
-                };
 
-                var marker = new google.maps.Marker({
-                    map: map,
-                    icon: icon,
-                    title: place.name,
-                    position: place.geometry.location
+                // Clear out the old markers.
+                markers.forEach(function (marker) {
+                    marker.setMap(null);
                 });
-                marker.addListener('click', function () {
-                    // add new line item to right side with 'x' button to remove it
-                    map.setCenter(marker.getPosition());
-                    let ul_waypoints = document.getElementById('ul_waypoints');
-                    let li = document.createElement('li');
-                    li.innerText = place.name + ' - ' + place.formatted_address;
-                    console.log(place);
-                    ul_waypoints.appendChild(li);
+                markers = [];
 
+                // For each place, get the icon, name and location.
+                var bounds = new google.maps.LatLngBounds();
+                places.forEach(function (place) {
+
+                    if (!place.geometry) {
+                        console.log("Returned place contains no geometry");
+                        return;
+                    }
+                    var icon = {
+                        url: place.icon,
+                        size: new google.maps.Size(71, 71),
+                        origin: new google.maps.Point(0, 0),
+                        anchor: new google.maps.Point(17, 34),
+                        scaledSize: new google.maps.Size(25, 25)
+                    };
+
+                    var marker = new google.maps.Marker({
+                        map: map,
+                        icon: icon,
+                        title: place.name,
+                        position: place.geometry.location
+                    });
+
+                    marker.addListener('click', function () {
+                        // add new line item to right side with 'x' button to remove it
+                        map.setCenter(marker.getPosition());
+                        let ul_waypoints = document.getElementById('ul_waypoints');
+                        let li = document.createElement('li');
+                        li.innerText = place.name + ' - ' + place.formatted_address;
+                        console.log(place);
+                        ul_waypoints.appendChild(li);
+                        locations.push(place.id);
+                    });
+
+                    marker.addListener('click', function (){
+                        ul_waypoints.pop()
+
+                    });
+
+
+                    // Create a marker for each place.
+                    markers.push(marker);
+
+                    if (place.geometry.viewport) {
+                        // Only geocodes have viewport.
+                        bounds.union(place.geometry.viewport);
+                    } else {
+                        bounds.extend(place.geometry.location);
+                    }
                 });
-
-                // Create a marker for each place.
-                markers.push(marker);
-
-                if (place.geometry.viewport) {
-                    // Only geocodes have viewport.
-                    bounds.union(place.geometry.viewport);
-                } else {
-                    bounds.extend(place.geometry.location);
-                }
+                map.fitBounds(bounds);
             });
-            map.fitBounds(bounds);
-        });
-    }
-</script>
-<script src="https://maps.googleapis.com/maps/api/js?key={{google_maps_api_key}}&libraries=places&callback=initAutocomplete"  async defer></script>
+        }
+
+
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key={{google_maps_api_key}}&libraries=places&callback=initAutocomplete"
+            async defer></script>
 </body>
 </html>
 

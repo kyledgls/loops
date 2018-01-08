@@ -85,3 +85,12 @@
                     map.fitBounds(bounds);
                 });
             }
+
+
+
+                let button_remove = document.createElement('button');
+                button_remove.innerHTML = '&#x2715;';
+                button_remove.onclick = function() {
+                ul_waypoints.removeChild(this.parentElement);
+                };
+
