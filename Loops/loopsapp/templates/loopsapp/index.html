@@ -156,7 +156,7 @@
             let data = {locations: locations};
 //            console.log(data);
             http_post("{% url 'loopsapp:getloop' %}", data, function (response) {
-                console.log(data);
+                console.log(response);
             });
         };
 

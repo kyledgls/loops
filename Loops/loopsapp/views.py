@@ -17,7 +17,7 @@ def getloop(request):
     first = locations.pop(0)
     url = 'https://maps.googleapis.com/maps/api/directions/json?'
     url += 'key=' + google_maps_api_key
-    return HttpResponse(url)
+    return HttpResponse(first)
 
 
     # return HttpResponse(json.dumps(data['locations']))
