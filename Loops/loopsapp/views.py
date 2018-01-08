@@ -19,11 +19,11 @@ def getloop(request):
     url += 'key=' + google_maps_api_key
     url += '&origin=place_id:' + first
     url += '&destination=place_id:' + first
-    url += '&waypoints='
+    url += '&waypoints=optimize:true|'
     for i in locations:
-        url += 'placeid:' + i + '|'
-    print(url)
-    return HttpResponse(first)
+        url += 'place_id:' + i + '|'
+    response = requests.get(url)
+    return HttpResponse(json.dumps(response.json()))
 
 
     # return HttpResponse(json.dumps(data['locations']))
