@@ -154,10 +154,13 @@
         let bt_loopulate = document.getElementById('bt_loopulate');
         bt_loopulate.onclick = function() {
             let data = {locations: locations};
+//            console.log(data);
             http_post("{% url 'loopsapp:getloop' %}", data, function (response) {
-                console.log(response);
+                console.log(data);
             });
         };
+
+
 
 
         function initAutocomplete() {
@@ -225,12 +228,10 @@
                         console.log(place);
                         ul_waypoints.appendChild(li);
                         locations.push(place.id);
-                    });
-
-                    marker.addListener('click', function (){
-                        ul_waypoints.pop()
 
                     });
+
+
 
 
                     // Create a marker for each place.
