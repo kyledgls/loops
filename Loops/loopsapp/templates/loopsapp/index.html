@@ -159,11 +159,11 @@
             let data = {locations: locations};
 //            console.log(data);
             http_post("{% url 'loopsapp:getloop' %}", data, function (response) {
-                route_data = JSON.parse(response);
-                for (let i=0; i<route_data.routes[0].legs.length; ++i) {
-                    console.log(route_data.routes[0].legs[i].start_address);
-                }
-
+		rjson = JSON.parse(response);
+		console.log(rjson['routes']);		
+		for(r in rjson['routes']){
+		  console.log(r);
+		}
             });
         };
 

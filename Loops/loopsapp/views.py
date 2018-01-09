@@ -22,6 +22,7 @@ def getloop(request):
     url += '&waypoints=optimize:true|'
     for i in locations:
         url += 'place_id:' + i + '|'
+    print(url)
     response = requests.get(url)
     return HttpResponse(json.dumps(response.json()))
 
