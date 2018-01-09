@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.1.4/js.cookie.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> 
     <meta charset="UTF-8">
     <title>Title</title>
     <meta name="description" content="Description">
@@ -100,7 +101,9 @@
             width: 345px;
         }
 
-
+	#right_div{
+	  overflow: scroll;
+	}
 
     </style>
 </head>
@@ -114,7 +117,7 @@
         <div id="map">
         </div>
     </div>
-    <div class="waypoint_container">
+    <div class="waypoint_container" id="right_div">
         <h3>WAYPOINTS</h3>
         <ul id="ul_waypoints">
         </ul>
@@ -123,7 +126,7 @@
     </div>
 
     <div class="footer">
-        footer
+        
     </div>
 
     <script>
@@ -174,7 +177,11 @@
 	    }
 	    directionsService.route(data, function(response, status){
 		if (status === 'OK') {
-            	   directionsDisplay.setDirections(response);
+                   $("#right_div").empty();
+                   directionsDisplay.setPanel($("#right_div")[0]);
+   		   
+     	 	   directionsDisplay.setDirections(response);
+
                    console.log(response.routes[0].legs);
           	} else {
             	   window.alert('Directions request failed due to ' + status);
@@ -199,6 +206,8 @@
                 mapTypeId: 'roadmap'
             });
             directionsDisplay.setMap(map);
+
+
             // Create the search box and link it to the UI element.
             var input = document.getElementById('pac-input');
             var searchBox = new google.maps.places.SearchBox(input);
