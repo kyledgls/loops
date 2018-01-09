@@ -5,11 +5,11 @@
 /*}*/
 
 .wrapper > div {
-  border: 2px solid rgb(93, 196, 233);
+  border: 2px solid rgb(41, 25, 139);
   border-radius: 5px;
-  background-color: rgba(201, 178, 255, 0.56);
+  background-color: rgb(253, 255, 255);
   padding: 1em;
-  color: #516fd9;
+  color: #fdffff;
 }
 
 .wrapper {
