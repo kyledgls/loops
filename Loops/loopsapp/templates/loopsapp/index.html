@@ -159,28 +159,27 @@
             //getloop
             var orig = locations[0];
 	    data = {
+		optimizeWaypoints: true,
 		origin: {'placeId': orig},
 		destination: {'placeId': orig},
-		travelMode: 'DRIVING'
+		travelMode: 'DRIVING',
+		waypoints: []
 	    };
+            locations_size = locations.length;
+            for(var x = 1; x < locations_size;++x){
+		data.waypoints.push({
+		  location: {'placeId':locations[x]},
+		  stopover: true
+		});
+	    }
 	    directionsService.route(data, function(response, status){
 		if (status === 'OK') {
             	   directionsDisplay.setDirections(response);
+                   console.log(response.routes[0].legs);
           	} else {
             	   window.alert('Directions request failed due to ' + status);
           	}
 	    });
-/*
-            let data = {locations: locations};
-            console.log(data);
-            http_post("{% url 'loopsapp:getloop' %}", data, function (response) {
-		rjson = JSON.parse(response);
-		console.log(rjson['routes']);		
-		for(r in rjson['routes']){
-		  console.log(r);
-		}
-            });
-*/
         };
 
 
