@@ -99,6 +99,9 @@
         #target {
             width: 345px;
         }
+
+
+
     </style>
 </head>
 <body>
@@ -156,7 +159,11 @@
             let data = {locations: locations};
 //            console.log(data);
             http_post("{% url 'loopsapp:getloop' %}", data, function (response) {
-                console.log(response);
+                route_data = JSON.parse(response);
+                for (let i=0; i<route_data.routes[0].legs.length; ++i) {
+                    console.log(route_data.routes[0].legs[i].start_address);
+                }
+
             });
         };
 
@@ -227,7 +234,7 @@
                         li.innerText = place.name + ' - ' + place.formatted_address;
                         console.log(place);
                         ul_waypoints.appendChild(li);
-                        locations.push(place.id);
+                        locations.push(place.place_id);
 
                     });
 
