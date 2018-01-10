@@ -40,3 +40,10 @@
 .footer {
     grid-area:footer;
 }
+
+#logo {
+    position: absolute;
+    top: -5px;
+    width: 4.65em;
+    height: 4.65em;
+}

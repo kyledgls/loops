@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from .secrets import google_maps_api_key
 import json
 import requests
+from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 
 # Create your views here.
@@ -37,3 +38,25 @@ def loginpanel(request):
         return HttpResponse('you are logged in')
     else:
         return HttpResponse('You are not logged in')
+
+def signup(request):
+    email = request.POST['ename']
+    first = request.POST['fname']
+    last = request.POST['lname']
+    password = request.POST['password']
+    user = User.objects.create_user(email, email=email, password=password)
+    user.first_name = first
+    user.last_name = last
+    user.save()
+    return render(request, 'loopsapp/index.html', {'google_maps_api_key': google_maps_api_key, 'loggedin': True})
+
+def loginu(request):
+
+    email = request.POST['ename']
+    password = request.POST['password']
+    user = authenticate(username=email, password=password)
+    print(user)
+    if user is not None:
+        return render(request, 'loopsapp/index.html', {'google_maps_api_key': google_maps_api_key, 'loggedin': True})
+
+

@@ -113,13 +113,24 @@
 <div class="wrapper">
 
     <div class="header" style="color:#29198b">
+        <div class="row"><img src="https://s3-us-west-2.amazonaws.com/tylervaslevpdx/loops_logo.png" id="logo">
+            <div class="col-2"></div>
+            <div class="col-7">
         {% if loggedin %}Logged In
         {% else %}Not Logged In
         {% endif %}
-    <button id="login" class="btn btn-primary">login</button>
-    <button id="createacct" data-toggle="modal" data-target="#create_acct_dialog">create account</button>
 
+            </div>
+            <div class="col-3">
+        {% if loggedin %}
+        <button id="logout" class="btn btn-primary">Logout</button>
+        {% else %}
 
+        <button id="login" data-toggle="modal" data-target="#login_acct_dialog" class="btn btn-primary">login</button>
+        <button id="createacct" data-toggle="modal" data-target="#create_acct_dialog">create account</button>
+         {% endif %}
+            </div>
+        </div>
     </div>
     <div class="map_container">
         <input id="pac-input" class="controls" type="text" placeholder="Search Box"/>
@@ -307,7 +318,7 @@
         <h4 class="modal-title">create account</h4>
       </div>
       <div class="modal-body">
-          <form>
+          <form method="POST" action="/signup/">{% csrf_token %}
             <div class="form-group">
                 <label id="firstname">First name:</label>
                 <input class="form-control" type="text" id="firstname" name="fname">
@@ -324,15 +335,47 @@
                 <label for="password">Password:</label>
                 <input class="form-control" type="password" id="password" name="password">
             </div>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Save changes</button>
       </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+
+
+<div class="modal fade" id="login_acct_dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title">Login</h4>
+      </div>
+      <div class="modal-body">
+          <form method="POST" action="/loginu/">{% csrf_token %}
+            <div class="form-group">
+                <label for="emailname">Email:</label>
+                <input class="form-control" type="email" id="emailname" name="ename">
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input class="form-control" type="password" id="password" name="password">
+            </div>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-default">Submit</button>
+      </form>
+      </div>
+      <div class="modal-footer">
+
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
 </body>
 </html>
 
