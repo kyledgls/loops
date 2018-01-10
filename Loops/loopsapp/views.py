@@ -27,7 +27,7 @@ def signup(request):
     user.last_name = last
     user.save()
     return render(request, 'loopsapp/index.html', {'google_maps_api_key': google_maps_api_key, 'loggedin': True,'first': request.user.first_name, 'ss':get_saved_searches(email)})
-
+# log the user in
 def loginu(request):
 
     email = request.POST['ename']
