@@ -10,7 +10,9 @@
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'loopsapp/loopsstyle.css' %}"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.bundle.min.js" integrity="sha384-VspmFJ2uqRrKr3en+IG0cIq1Cl/v/PHneDw6SQZYgrcr8ZZmZoQ3zhuGfMnSR/F2" crossorigin="anonymous"></script>
     <style>
         * {
             box-sizing: border-box;
@@ -109,8 +111,15 @@
 </head>
 <body>
 <div class="wrapper">
-    <div class="header">
-        header
+
+    <div class="header" style="color:#29198b">
+        {% if loggedin %}Logged In
+        {% else %}Not Logged In
+        {% endif %}
+    <button id="login" class="btn btn-primary">login</button>
+    <button id="createacct" data-toggle="modal" data-target="#create_acct_dialog">create account</button>
+
+
     </div>
     <div class="map_container">
         <input id="pac-input" class="controls" type="text" placeholder="Search Box"/>
@@ -290,6 +299,40 @@
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key={{google_maps_api_key}}&libraries=places&callback=initAutocomplete"
             async defer></script>
+    <div class="modal fade" id="create_acct_dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title">create account</h4>
+      </div>
+      <div class="modal-body">
+          <form>
+            <div class="form-group">
+                <label id="firstname">First name:</label>
+                <input class="form-control" type="text" id="firstname" name="fname">
+            </div>
+            <div class="form-group">
+                <label id="lastname">Last name:</label>
+                <input class="form-control" type="text" id="lastname" name="lname">
+            </div>
+            <div class="form-group">
+                <label for="emailname">Email:</label>
+                <input class="form-control" type="email" id="emailname" name="ename">
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input class="form-control" type="password" id="password" name="password">
+            </div>
+      </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 </body>
 </html>
 

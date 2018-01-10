@@ -3,11 +3,12 @@ from django.http import HttpResponse
 from .secrets import google_maps_api_key
 import json
 import requests
+from django.contrib.auth import authenticate
 
 # Create your views here.
 def index(request):
-    print(google_maps_api_key)
-    return render(request, 'loopsapp/index.html', {'google_maps_api_key':google_maps_api_key})
+    isLoggedIn = request.user.is_authenticated
+    return render(request, 'loopsapp/index.html', {'google_maps_api_key': google_maps_api_key, 'loggedin': isLoggedIn})
 
 
 def getloop(request):
@@ -30,4 +31,9 @@ def getloop(request):
     # return HttpResponse(json.dumps(data['locations']))
 
 
-
+def loginpanel(request):
+    print('loginpanel is reached')
+    if request.user.is_authenticated:
+        return HttpResponse('you are logged in')
+    else:
+        return HttpResponse('You are not logged in')
