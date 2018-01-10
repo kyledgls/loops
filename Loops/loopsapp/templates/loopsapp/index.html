@@ -116,14 +116,16 @@
         <div class="row"><img src="https://s3-us-west-2.amazonaws.com/tylervaslevpdx/loops_logo.png" id="logo">
             <div class="col-2"></div>
             <div class="col-7">
-        {% if loggedin %}Logged In
+        {% if loggedin %}Welcome, {{first}}!
         {% else %}Not Logged In
         {% endif %}
 
             </div>
             <div class="col-3">
         {% if loggedin %}
-        <button id="logout" class="btn btn-primary">Logout</button>
+        <form method="POST" action="/logoutu/">{% csrf_token %}
+           <button id="logout" type="submit" class="btn btn-primary">Logout</button>
+	</form>
         {% else %}
 
         <button id="login" data-toggle="modal" data-target="#login_acct_dialog" class="btn btn-primary">login</button>
@@ -213,18 +215,35 @@
         var directionsDisplay;
         var directionsService;
         var map;
-
+        var infoWindow;
 
         function initAutocomplete() {
             directionsService = new google.maps.DirectionsService();
 
 	    directionsDisplay = new google.maps.DirectionsRenderer();
-            
+            infoWindow = new google.maps.InfoWindow;
+
             map = new google.maps.Map(document.getElementById('map'), {
-                center: {lat: -33.8688, lng: 151.2195},
+                center: {lat: 45.5281, lng: -122.6630},
                 zoom: 13,
                 mapTypeId: 'roadmap'
             });
+	    // Try HTML5 geolocation.
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(function(position) {
+            var pos = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude
+            };
+
+            infoWindow.setPosition(pos);
+            infoWindow.setContent('Location found.');
+            infoWindow.open(map);
+            map.setCenter(pos);
+          }, function() {
+            handleLocationError(true, infoWindow, map.getCenter());
+          });
+        }
             directionsDisplay.setMap(map);
 
 
