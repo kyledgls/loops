@@ -5,7 +5,7 @@ import json
 import requests
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
-from django.contrib.auth import logout
+from django.contrib.auth import login, logout
 from loopsapp.models import SavedSearch
 
 # Create your views here.
@@ -26,15 +26,17 @@ def signup(request):
     user.first_name = first
     user.last_name = last
     user.save()
-    return render(request, 'loopsapp/index.html', {'google_maps_api_key': google_maps_api_key, 'loggedin': True,'first': request.user.first_name, 'ss':get_saved_searches(email)})
+    login(request, user)
+    return render(request, 'loopsapp/index.html', {'google_maps_api_key': google_maps_api_key, 'loggedin': True,'first': user.first_name, 'ss':get_saved_searches(email)})
+
 # log the user in
 def loginu(request):
 
     email = request.POST['ename']
     password = request.POST['password']
     user = authenticate(username=email, password=password)
-    print(user)
     if user is not None:
+        login(request, user)
         return render(request, 'loopsapp/index.html', {'google_maps_api_key': google_maps_api_key, 'loggedin': True,'first': user.first_name, 'ss': get_saved_searches(email)})
 
 def logoutu(request):
@@ -45,7 +47,6 @@ def get_saved_searches(email):
     match = []
     sso = SavedSearch.objects.all()
     for s in sso:
-      print(s.get_email())
       if s.email == email:
         match.append(s)
     return match

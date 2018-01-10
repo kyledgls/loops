@@ -147,6 +147,7 @@
     </div>
 
     <div class="footer">
+        <p>Add each address individually and click the new marker to add the new address.</p>
         <button data-target="#save_search_dialog" data-toggle="modal"  class="btn btn-primary" id="save_search">Save Search</button>
         <a href="http://loopulate.com" class="btn btn-primary" id="reset">Reset</a>
     </div>
@@ -180,11 +181,12 @@
         }
 
         let locations = [];
-
+// loopulates!!!
         let bt_loopulate = document.getElementById('bt_loopulate');
         bt_loopulate.onclick = function() {
-            //getloop
+            //gets the first/last item
             var orig = locations[0];
+            // object passed to google service for directions
 	    data = {
 		optimizeWaypoints: true,
 		origin: {'placeId': orig},
@@ -193,19 +195,24 @@
 		waypoints: []
 	    };
             locations_size = locations.length;
+            // goes throught the rest of the locations and categorizes as way points
             for(var x = 1; x < locations_size;++x){
 		data.waypoints.push({
 		  location: {'placeId':locations[x]},
 		  stopover: true
 		});
 	    }
+	    // does the directions look up
 	    directionsService.route(data, function(response, status){
 		if (status === 'OK') {
+		    // removes everything in right panel to replace with directions
                    $("#right_div").empty();
 		   {% if loggedin %}
                      //$("#save_search").show();
                	   {% endif %}
+               	   // adds a button so they can do another search
                    $("#reset").show();
+		            // populates the directions in the right panel
                    directionsDisplay.setPanel($("#right_div")[0]);
    		   $("#json_hidden").val(JSON.stringify(response));
      	 	   directionsDisplay.setDirections(response);
@@ -283,7 +290,7 @@
                         title: place.name,
                         position: place.geometry.location
                     });
-
+// sets map center
                     marker.addListener('click', function () {
                         // add new line item to right side with 'x' button to remove it
                         map.setCenter(marker.getPosition());
