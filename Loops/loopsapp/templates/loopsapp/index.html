@@ -4,7 +4,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.1.4/js.cookie.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> 
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Loop</title>
     <meta name="description" content="Description">
 
     {% load static %}
@@ -129,7 +129,7 @@
         {% else %}
 
         <button id="login" data-toggle="modal" data-target="#login_acct_dialog" class="btn btn-primary">login</button>
-        <button id="createacct" data-toggle="modal" data-target="#create_acct_dialog">create account</button>
+        <button id="createacct" data-toggle="modal" data-target="#create_acct_dialog" class="btn btn-primary">create account</button>
          {% endif %}
             </div>
         </div>
@@ -143,8 +143,8 @@
         <h3>WAYPOINTS</h3>
         <ul id="ul_waypoints">
         </ul>
-        <button id="button_remove">Remove</button>
-        <button id="bt_loopulate">loopulate</button>
+        <button id="button_remove" class="btn btn-primary">remove</button>
+        <button id="bt_loopulate" class="btn btn-primary">loopulate</button>
     </div>
 
     <div class="footer">
