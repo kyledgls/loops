@@ -117,6 +117,7 @@
             <div class="col-2"></div>
             <div class="col-7">
         {% if loggedin %}Welcome, {{first}}!
+        SS is {{ss}}
         {% else %}Not Logged In
         {% endif %}
 
@@ -143,15 +144,17 @@
         <h3>WAYPOINTS</h3>
         <ul id="ul_waypoints">
         </ul>
-        <button id="button_remove" class="btn btn-primary">remove</button>
         <button id="bt_loopulate" class="btn btn-primary">loopulate</button>
     </div>
 
     <div class="footer">
-        
+        <button data-target="#save_search_dialog" data-toggle="modal"  class="btn btn-primary" id="save_search">Save Search</button>
+        <a href="http://loopulate.com" class="btn btn-primary" id="reset">Reset</a>
     </div>
 
     <script>
+        $("#save_search").hide();
+        $("#reset").hide();
         // This example adds a search box to a map, using the Google Place Autocomplete
         // feature. People can enter geographical searches. The search box will return a
         // pick list containing a mix of places and predicted search terms.
@@ -200,8 +203,12 @@
 	    directionsService.route(data, function(response, status){
 		if (status === 'OK') {
                    $("#right_div").empty();
+		   {% if loggedin %}
+                     //$("#save_search").show();
+               	   {% endif %}
+                   $("#reset").show();
                    directionsDisplay.setPanel($("#right_div")[0]);
-   		   
+   		   $("#json_hidden").val(JSON.stringify(response));
      	 	   directionsDisplay.setDirections(response);
 
                    console.log(response.routes[0].legs);
@@ -215,35 +222,17 @@
         var directionsDisplay;
         var directionsService;
         var map;
-        var infoWindow;
 
         function initAutocomplete() {
             directionsService = new google.maps.DirectionsService();
 
 	    directionsDisplay = new google.maps.DirectionsRenderer();
-            infoWindow = new google.maps.InfoWindow;
 
             map = new google.maps.Map(document.getElementById('map'), {
                 center: {lat: 45.5281, lng: -122.6630},
                 zoom: 13,
                 mapTypeId: 'roadmap'
             });
-	    // Try HTML5 geolocation.
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(function(position) {
-            var pos = {
-              lat: position.coords.latitude,
-              lng: position.coords.longitude
-            };
-
-            infoWindow.setPosition(pos);
-            infoWindow.setContent('Location found.');
-            infoWindow.open(map);
-            map.setCenter(pos);
-          }, function() {
-            handleLocationError(true, infoWindow, map.getCenter());
-          });
-        }
             directionsDisplay.setMap(map);
 
 
@@ -383,6 +372,32 @@
                 <label for="password">Password:</label>
                 <input class="form-control" type="password" id="password" name="password">
             </div>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-default">Submit</button>
+      </form>
+      </div>
+      <div class="modal-footer">
+
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+<div class="modal fade" id="save_search_dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title">Save Search</h4>
+      </div>
+      <div class="modal-body">
+          <form method="POST" action="/save_search/">{% csrf_token %}
+            <div class="form-group">
+                <label for="name">Name of Search</label>
+                <input class="form-control" type="text" id="name" name="search_name">
+            </div>
+            <input id="json_hidden" name="json_hidden" type="text">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             <button type="submit" class="btn btn-default">Submit</button>
       </form>
